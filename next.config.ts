@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    unoptimized: true, // Disable Next.js Image Optimization API ensuring images load directly from WP
+    unoptimized: true, // Disable Next.jss Image Optimization API ensuring images load directly from WP
     remotePatterns: [
       {
         protocol: 'http',
