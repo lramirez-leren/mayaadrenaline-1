@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import CarruselExperiencias from "@/components/CarruselExperiencias";
 import ExperienciasPopulares from "@/components/ExperienciasPopulares";
 import BotonCTA2 from "@/components/botonCTA2";
@@ -25,6 +25,7 @@ interface Excursion {
 }
 
 import { Settings } from "@/types/settings";
+import { sortExcursionsByTitleAsc } from "@/lib/excursionSort";
 
 // ... (Excursion interface remains)
 
@@ -63,7 +64,9 @@ export default async function Home() {
   // Fetch in parallel. Handle excursiones error gracefully to allow render
   const [settings, excursionesResult] = await Promise.allSettled([settingsData, excursionesData]);
 
-  const excursiones = excursionesResult.status === 'fulfilled' ? excursionesResult.value : [];
+  const excursiones = sortExcursionsByTitleAsc(
+    excursionesResult.status === 'fulfilled' ? excursionesResult.value : []
+  );
   const fetchedSettings = settings.status === 'fulfilled' ? settings.value : {} as Settings;
 
   // Fallback URLs

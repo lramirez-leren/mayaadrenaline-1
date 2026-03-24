@@ -1,6 +1,6 @@
-﻿
 import Link from 'next/link';
 import PriceTable from '@/components/PriceTable'; // Import Client Component
+import { compareByExcursionTitlePlain } from '@/lib/excursionSort';
 
 interface ExcursionPrecio {
     id: number;
@@ -21,13 +21,14 @@ async function getExcursionPrices(): Promise<ExcursionPrecio[]> {
         if (!res.ok) return [];
 
         const data: any[] = await res.json();
-        return data.map((item) => ({
+        const rows = data.map((item) => ({
             id: item.id,
             title: item.title.rendered,
             price: item.precio || 'Consultar',
             slug: item.slug,
             duration: item.duration || 'N/A', // Map duration
         }));
+        return rows.sort((a, b) => compareByExcursionTitlePlain(a.title, b.title));
     } catch (error) {
         console.error("Error fetching prices:", error);
         return [];
