@@ -25,7 +25,7 @@ interface Excursion {
 }
 
 import { Settings } from "@/types/settings";
-import { sortExcursionsByTitleAsc } from "@/lib/excursionSort";
+
 
 // ... (Excursion interface remains)
 
@@ -46,7 +46,7 @@ async function getSettings(): Promise<Settings> {
 async function getExcursiones(): Promise<Excursion[]> {
   // ... (unchanged fetch logic)
   const apiUrl = (process.env.WP_BUILD_URL || (process.env.NEXT_PUBLIC_API_URL || 'https://back.mayaadrenaline.com.mx') || 'https://back.mayaadrenaline.com.mx');
-  const res = await fetch(`${apiUrl}/wp-json/wp/v2/excursion?_embed`, {
+  const res = await fetch(`${apiUrl}/wp-json/wp/v2/excursion?_embed&per_page=100&orderby=menu_order&order=asc`, {
     next: { revalidate: 10 },
   });
 
@@ -64,9 +64,7 @@ export default async function Home() {
   // Fetch in parallel. Handle excursiones error gracefully to allow render
   const [settings, excursionesResult] = await Promise.allSettled([settingsData, excursionesData]);
 
-  const excursiones = sortExcursionsByTitleAsc(
-    excursionesResult.status === 'fulfilled' ? excursionesResult.value : []
-  );
+  const excursiones = excursionesResult.status === 'fulfilled' ? excursionesResult.value : [];
   const fetchedSettings = settings.status === 'fulfilled' ? settings.value : {} as Settings;
 
   // Fallback URLs

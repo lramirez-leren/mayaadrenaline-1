@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PriceTable from '@/components/PriceTable'; // Import Client Component
-import { compareByExcursionTitlePlain } from '@/lib/excursionSort';
+
 
 interface ExcursionPrecio {
     id: number;
@@ -14,7 +14,7 @@ async function getExcursionPrices(): Promise<ExcursionPrecio[]> {
     try {
         const apiUrl = (process.env.WP_BUILD_URL || (process.env.NEXT_PUBLIC_API_URL || 'https://back.mayaadrenaline.com.mx') || 'https://back.mayaadrenaline.com.mx');
         // Added duration to fields
-        const res = await fetch(`${apiUrl}/wp-json/wp/v2/excursion?per_page=100&_fields=id,title,precio,slug,duration`, {
+        const res = await fetch(`${apiUrl}/wp-json/wp/v2/excursion?per_page=100&orderby=menu_order&order=asc&_fields=id,title,precio,slug,duration`, {
             next: { revalidate: 300 },
         });
 
@@ -28,7 +28,7 @@ async function getExcursionPrices(): Promise<ExcursionPrecio[]> {
             slug: item.slug,
             duration: item.duration || 'N/A', // Map duration
         }));
-        return rows.sort((a, b) => compareByExcursionTitlePlain(a.title, b.title));
+        return rows;
     } catch (error) {
         console.error("Error fetching prices:", error);
         return [];

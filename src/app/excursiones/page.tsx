@@ -91,7 +91,7 @@ async function getActivities(): Promise<Activity[]> {
 async function getExcursiones(): Promise<Excursion[]> {
     try {
         const apiUrl = (process.env.WP_BUILD_URL || (process.env.NEXT_PUBLIC_API_URL || 'https://back.mayaadrenaline.com.mx') || 'https://back.mayaadrenaline.com.mx');
-        const res = await fetch(`${apiUrl}/wp-json/wp/v2/excursion?_embed&per_page=100`, {
+        const res = await fetch(`${apiUrl}/wp-json/wp/v2/excursion?_embed&per_page=100&orderby=menu_order&order=asc`, {
             next: { revalidate: 60 },
         });
 
